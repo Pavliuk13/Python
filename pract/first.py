@@ -1,30 +1,29 @@
 class Rectangle:
     def __init__(self):
         self.__length, self.__width = 1, 1
+    
     def setLength(self, item):
         try:
-            if item <= 0.0 or item > 20.0:
-                print("Value must be in range (0.0, 20.0]")
-            elif not isinstance(item, float):
-                print("Type must be 'float'")
+            if item <= 0.0 or item > 20.0 or not isinstance(item, float):
+                raise ValueError             
             else:
                 self.__length = item
+                return True
         except:
-            print("Error value")
+            return False
 
     def getLength(self):
         return self.__length
 
     def setWidth(self, item):
         try:
-            if item <= 0.0 or item > 20.0:
-                print("Value must be in range (0.0, 20.0]")
-            elif not isinstance(item, float):
-                print("Type must be 'float'")
+            if item <= 0.0 or item > 20.0 or not isinstance(item, float):
+                raise ValueError
             else:
                 self.__width = item
+                return True
         except:
-            print("Value error")
+            return False
 
     def getWidth(self):
         return self.__width
@@ -35,7 +34,9 @@ class Rectangle:
     def area(self):
         return self.getWidth() * self.getLength()
 
+
+
 rec = Rectangle()
-rec.setLength(10.0)
-rec.setWidth(20.0)
+print("Try to set length:", rec.setLength(11.1)) # True
+print("Try to set width:", rec.setWidth(20.0))   # True
 print(rec.getLength(), rec.getWidth(), rec.perimetr(), rec.area()) #10.0 20.0 60.0 200.0
