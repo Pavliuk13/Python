@@ -2,29 +2,37 @@ import re
 
 class Statistic:
     def __init__(self, name):
-        if not open(name, "r"):
+        if not len(name):
+            return ValueError
+        elif not open(name, "r"):
             raise FileNotFoundError
-        self.__file = open(name, "r")
-        self.__text = self.__file.read()
+        self.__name = name
 
     def countSymbol(self):
-        return len(self.__text)
+        text = ""
+        with open(self.__name, 'r') as f:
+            text = f.read()
+        return len(text)
     
     def countSentences(self):
-        return len(re.split(r'[.?!]+', self.__text)) - 1
+        text = ""
+        with open(self.__name, 'r') as f:
+            text = f.read()
+        return len(re.split(r'[.?!]+', text)) - 1
     
     def countWords(self):
-        return len(self.__text.split())
+        text = ""
+        with open(self.__name, 'r') as f:
+            text = f.read()
+        return len(text.split())
 
 
 if __name__ == "__main__":
     try:
-        fileName = "lorem.txt"
+        fileName = r'E:\prog works\python\test\pract2\lorem.txt'
         stats = Statistic(fileName)
         print("Symbols: ", stats.countSymbol()) # Symbols: 28
         print("Words: ", stats.countWords()) # Words: 5
         print("Sentences: ", stats.countSentences()) # Sentences: 5
     except:
         print("Error! File not found")
-
-

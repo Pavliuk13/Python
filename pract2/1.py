@@ -18,7 +18,7 @@ class Product:
         return self.__price
 
     def getInfo(self):
-        return f'Priсe: {self.__price}$, Description: {self.__desc}, Height: {self.__dimention[0]}cm, Width: {self.__dimention[1]}cm, Length: {self.__dimention[2]}cm'
+        return f'Priсe: {self.__price}$, Description: {self.__desc}, Height: {self.__dimention[0]}mm, Width: {self.__dimention[1]}mm, Length: {self.__dimention[2]}mm'
 
 
 
@@ -45,17 +45,24 @@ class Order:
         self.__data = {}
     
     def newClient(self, client):
+        if not isinstance(client, Client):
+            raise TypeError
         self.__data[client] = []
         
     def addProduct(self, client, product):
+        if not isinstance(client, Client) or not isinstance(product, Product):
+            raise TypeError
         self.__data[client].append(product)
 
-    def showDataBase(self):
+    def DataBase(self):
+        data = ""
         for key in self.__data:
             array = self.__data.get(key)
-            print(key.getInfo())
+            data += key.getInfo() + '\n'
+
             for value in array:
-                print(value.getInfo())
+                data += value.getInfo() + '\n'
+        return data
 
     def fullPriceOfOrder(self, client):
         sum = 0
@@ -93,24 +100,21 @@ if __name__ == "__main__":
         # third customer order
         order.addProduct(client3, prod3)
         # full price of the order of the first customer
-        print(order.fullPriceOfOrder(client1)) # Pavliuk Vasyl Olexandrovich: 230724.5$
-        print(order.fullPriceOfOrder(client2)) # Pavliuk Volodymyr Olexandrovich: 280724.0$
-        print(order.fullPriceOfOrder(client3)) # Pavliuk Olexandr Mykolayovich: 10362.0$
+        print(order.fullPriceOfOrder(client1) + '\n') # Pavliuk Vasyl Olexandrovich: 230724.5$
+        print(order.fullPriceOfOrder(client2) + '\n') # Pavliuk Volodymyr Olexandrovich: 280724.0$
+        print(order.fullPriceOfOrder(client3) + '\n') # Pavliuk Olexandr Mykolayovich: 10362.0$
         # show all orders
-        order.showDataBase()
+        print(order.DataBase())
                             # Client Pavliuk Vasyl Olexandrovich
                             # Age: 18, Phone: 0639746908
-                            # Prise: 100362.0$, Description: Audi A5, Height: 2920.24cm, Width: 2004.01cm, Length: 5609.77cm
-                            # Prise: 130362.5$, Description: Wolkswagen, Height: 3920.24cm, Width: 1000.01cm, Length: 5679.77cm
+                            # Prise: 100362.0$, Description: Audi A5, Height: 2920.24mm, Width: 2004.01mm, Length: 5609.77mm
+                            # Prise: 130362.5$, Description: Wolkswagen, Height: 3920.24mm, Width: 1000.01mm, Length: 5679.77mm
                             # Client Pavliuk Volodymyr Olexandrovich
                             # Age: 24, Phone: 0639752563
-                            # Prise: 150362.0$, Description: Mercedes C class, Height: 1920.24cm, Width: 2500.01cm, Length: 5679.77cm
-                            # Prise: 130362.0$, Description: Tesla, Height: 1920.24cm, Width: 2000.01cm, Length: 5699.77cm
+                            # Prise: 150362.0$, Description: Mercedes C class, Height: 1920.24mm, Width: 2500.01mm, Length: 5679.77mm
+                            # Prise: 130362.0$, Description: Tesla, Height: 1920.24mm, Width: 2000.01mm, Length: 5699.77mm
                             # Client Pavliuk Olexandr Mykolayovich
                             # Age: 45, Phone: 063649752653
-                            # Prise: 10362.0$, Description: Daewoo, Height: 920.24cm, Width: 2030.01cm, Length: 5689.77cm
+                            # Prise: 10362.0$, Description: Daewoo, Height: 920.24mm, Width: 2030.01mm, Length: 5689.77mm
     except:
-        print("Error!") 
-
-
-    
+        print("Wrong data") 
