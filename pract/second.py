@@ -4,6 +4,8 @@ class Rational:
     def __init__(self, numerator = 1, denumerator = 2):
         if not denumerator:
             raise ZeroDivisionError("Error: denumerator == 0")
+        elif not isinstance(numerator, int) or not isinstance(denumerator, int):
+            raise TypeError("Wrong type of arguments")
         n = gcd(numerator, denumerator)
         self.__nummerator = int(numerator / n)
         self.__denumerator = int(denumerator / n)
