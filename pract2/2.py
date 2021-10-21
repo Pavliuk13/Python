@@ -3,9 +3,9 @@ import re
 class Statistic:
     def __init__(self, name):
         if not len(name):
-            return ValueError
+            raise ValueError("Not correct data")
         elif not open(name, "r"):
-            raise FileNotFoundError
+            raise FileNotFoundError("File not found")
         self.__name = name
 
     def countSymbol(self):
@@ -34,5 +34,5 @@ if __name__ == "__main__":
         print("Symbols: ", stats.countSymbol()) # Symbols: 28
         print("Words: ", stats.countWords()) # Words: 5
         print("Sentences: ", stats.countSentences()) # Sentences: 5
-    except:
-        print("Error! File not found")
+    except Exception as ex:
+        print(ex)

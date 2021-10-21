@@ -1,15 +1,9 @@
 class Product:
     def __init__(self, price, desc, dimension):
         if not isinstance(price, float) or not isinstance(desc, str) or not isinstance(dimension, list):
-            raise TypeError
-        elif price <= 0 or not len(desc) or len(dimension) < 3 or len(dimension) > 3:
-            raise ValueError
-        else:
-            for i in dimension:
-                if not isinstance(i, float):
-                    raise TypeError
-                elif i <= 0:
-                    raise ValueError
+            raise TypeError("Wrong type of variables")
+        elif price <= 0 or not len(desc) or len(dimension) < 3 or len(dimension) > 3 or not all(isinstance(x, float) and x > 0 for x in dimension):
+            raise ValueError("Not correct data")
         self.__price = price
         self.__desc = desc
         self.__dimention = dimension
@@ -25,9 +19,9 @@ class Product:
 class Client:
     def __init__(self, name, surname, patronymic, phone, age):
         if not isinstance(name, str) or not isinstance(surname, str) or not isinstance(patronymic, str) or not isinstance(phone, str) or not isinstance(age, int):
-            raise TypeError
+            raise TypeError("Wrong type of variables")
         elif not len(name) or not len(surname) or not len(patronymic) or not len(phone) or age < 18:
-            raise ValueError
+            raise ValueError("Not correct data")
         self.__name = name
         self.__surname = surname
         self.__patronymic = patronymic
@@ -46,12 +40,12 @@ class Order:
     
     def newClient(self, client):
         if not isinstance(client, Client):
-            raise TypeError
+            raise TypeError("Wrong type of variables")
         self.__data[client] = []
         
     def addProduct(self, client, product):
         if not isinstance(client, Client) or not isinstance(product, Product):
-            raise TypeError
+            raise TypeError("Wrong type of variables")
         self.__data[client].append(product)
 
     def DataBase(self):
@@ -116,5 +110,5 @@ if __name__ == "__main__":
                             # Client Pavliuk Olexandr Mykolayovich
                             # Age: 45, Phone: 063649752653
                             # Prise: 10362.0$, Description: Daewoo, Height: 920.24mm, Width: 2030.01mm, Length: 5689.77mm
-    except:
-        print("Wrong data") 
+    except Exception as ex:
+        print(ex) 
