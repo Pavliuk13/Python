@@ -17,7 +17,7 @@ class Product:
 
 
 class Client:
-    def __init__(self, name, surname, patronymic, phone, age):
+    def __init__(self, surname, name, patronymic, phone, age):
         if not isinstance(name, str) or not isinstance(surname, str) or not isinstance(patronymic, str) or not isinstance(phone, str) or not isinstance(age, int):
             raise TypeError("Wrong type of variables")
         elif not len(name) or not len(surname) or not len(patronymic) or not len(phone) or age < 18:
@@ -63,22 +63,22 @@ class Order:
         array = self.__data[client]
         for i in array:
             sum += i.getPrice()
-        return f'{client.getFullName()}: {sum}$'
+        return f'{client.getFullName()}: {round(sum, 2)}$'
     
 
 
 
 if __name__ == "__main__":     
     try:
-        client1 = Client("Vasyl", "Pavliuk", "Olexandrovich", "0639746908", 18)
-        client2 = Client("Volodymyr", "Pavliuk", "Olexandrovich", "0639752563", 24)
-        client3 = Client("Olexandr", "Pavliuk", "Mykolayovich", "063649752653", 45)
+        client1 = Client("Plisiuk", "Nazar", "Valentinovich", "986254563", 20)
+        client2 = Client("Karpiuk", "Alina", "Olexandrivna", "986254563", 24)
+        client3 = Client("Subitskiy", "Pavlo", "Romanovich", "986254563", 18)
         
-        prod1 = Product(100362.0, "Audi A5", [2920.24, 2004.01, 5609.77])
-        prod2 = Product(150362.0, "Mercedes C class", [1920.24, 2500.01, 5679.77])
-        prod3 = Product(10362.0, "Daewoo", [920.24, 2030.01, 5689.77])
-        prod4 = Product(130362.0, "Tesla", [1920.24, 2000.01, 5699.77])
-        prod5 = Product(130362.5, "Wolkswagen", [3920.24, 1000.01, 5679.77])
+        prod1 = Product(1.1, "Product 1", [1.0, 1.1, 1.2])
+        prod2 = Product(2.2, "Product 2", [2.1, 2.2, 2.3])
+        prod3 = Product(3.3, "Product 3", [3.1, 3.2, 3.3])
+        prod4 = Product(4.4, "Product 4", [4.1, 4.2, 4.3])
+        prod5 = Product(5.6, "Product 5", [5.1, 5.2, 5.3])
 
         order = Order()
         # initialize new customers in the order
@@ -94,21 +94,21 @@ if __name__ == "__main__":
         # third customer order
         order.addProduct(client3, prod3)
         # full price of the order of the first customer
-        print(order.fullPriceOfOrder(client1) + '\n') # Pavliuk Vasyl Olexandrovich: 230724.5$
-        print(order.fullPriceOfOrder(client2) + '\n') # Pavliuk Volodymyr Olexandrovich: 280724.0$
-        print(order.fullPriceOfOrder(client3) + '\n') # Pavliuk Olexandr Mykolayovich: 10362.0$
+        print(order.fullPriceOfOrder(client1) + '\n') # Plisiuk Nazar Valentinovich: 6.7$
+        print(order.fullPriceOfOrder(client2) + '\n') # Karpiuk Alina Olexandrivna: 6.6$
+        print(order.fullPriceOfOrder(client3) + '\n') # Subitskiy Pavlo Romanovich: 3.3$
         # show all orders
         print(order.DataBase())
-                            # Client Pavliuk Vasyl Olexandrovich
-                            # Age: 18, Phone: 0639746908
-                            # Prise: 100362.0$, Description: Audi A5, Height: 2920.24mm, Width: 2004.01mm, Length: 5609.77mm
-                            # Prise: 130362.5$, Description: Wolkswagen, Height: 3920.24mm, Width: 1000.01mm, Length: 5679.77mm
-                            # Client Pavliuk Volodymyr Olexandrovich
-                            # Age: 24, Phone: 0639752563
-                            # Prise: 150362.0$, Description: Mercedes C class, Height: 1920.24mm, Width: 2500.01mm, Length: 5679.77mm
-                            # Prise: 130362.0$, Description: Tesla, Height: 1920.24mm, Width: 2000.01mm, Length: 5699.77mm
-                            # Client Pavliuk Olexandr Mykolayovich
-                            # Age: 45, Phone: 063649752653
-                            # Prise: 10362.0$, Description: Daewoo, Height: 920.24mm, Width: 2030.01mm, Length: 5689.77mm
+                                # Client Plisiuk Nazar Valentinovich
+                                # Age: 20, Phone: 986254563
+                                # Priсe: 1.1$, Description: Product 1, Height: 1.0mm, Width: 1.1mm, Length: 1.2mm
+                                # Priсe: 5.6$, Description: Product 5, Height: 5.1mm, Width: 5.2mm, Length: 5.3mm
+                                # Client Karpiuk Alina Olexandrivna
+                                # Age: 24, Phone: 986254563
+                                # Priсe: 2.2$, Description: Product 2, Height: 2.1mm, Width: 2.2mm, Length: 2.3mm
+                                # Priсe: 4.4$, Description: Product 4, Height: 4.1mm, Width: 4.2mm, Length: 4.3mm
+                                # Client Subitskiy Pavlo Romanovich
+                                # Age: 18, Phone: 986254563
+                                # Priсe: 3.3$, Description: Product 3, Height: 3.1mm, Width: 3.2mm, Length: 3.3mm
     except Exception as ex:
         print(ex) 

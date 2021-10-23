@@ -8,23 +8,21 @@ class Statistic:
             raise FileNotFoundError("File not found")
         self.__name = name
 
+    def __readFile(self):
+        with open(self.__name, 'r') as f:
+            self.__text = f.read()
+
     def countSymbol(self):
-        text = ""
-        with open(self.__name, 'r') as f:
-            text = f.read()
-        return len(text)
-    
+        self.__readFile()
+        return len(self.__text)
+
     def countSentences(self):
-        text = ""
-        with open(self.__name, 'r') as f:
-            text = f.read()
-        return len(re.split(r'[.?!]+', text)) - 1
+        self.__readFile()
+        return len(re.split(r'[.?!]+', self.__text)) - 1
     
     def countWords(self):
-        text = ""
-        with open(self.__name, 'r') as f:
-            text = f.read()
-        return len(text.split())
+        self.__readFile()
+        return len(re.split(r'[\'\-\w]+', self.__text)) - 1
 
 
 if __name__ == "__main__":

@@ -6,6 +6,20 @@ class Rectangle:
            raise ValueError("Wrong data") 
         self.__length, self.__width = length, width
 
+    def setLength(self, length):
+        if not isinstance(length, float):
+            raise TypeError("Wrong type of variables")
+        elif length <= 0.0 or length > 20.0:
+           raise ValueError("Wrong data") 
+        self.__length = length
+
+    def setWidth(self, width):
+        if not isinstance(width, float):
+            raise TypeError("Wrong type of variables")
+        elif width <= 0.0 or width > 20.0:
+           raise ValueError("Wrong data") 
+        self.__width = width
+
     def getLength(self):
         return self.__length
 

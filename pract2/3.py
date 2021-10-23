@@ -2,7 +2,7 @@ class Student:
     def __init__(self, name, surname, number, evaluation):
         if not isinstance(name, str) or not isinstance(surname, str) or not isinstance(number, int) or not isinstance(evaluation, list):
             raise TypeError("Wrong type of variables")
-        elif not len(name) or not len(surname) or number < 0 or not all(isinstance(x, int) for x in evaluation) or not all(x > 0 and x <= 5 for x in evaluation):
+        elif not len(name) or not len(surname) or number < 0 or not all(isinstance(x, int) for x in evaluation) or not all(x > 0 and x <= 5 for x in evaluation) or len(evaluation) < 5 or len(evaluation) > 5:
             raise ValueError("Not correct data")
         self.__name = name
         self.__surname = surname
@@ -12,19 +12,50 @@ class Student:
     def FullName(self):
         return f'{self.__name} {self.__surname}'
 
-    def Evauation(self):
-        arr = map(str, self.__evaluation)
-        return ", ".join(arr)
+    def setName(self, name):
+        if not isinstance(name, str):
+            raise TypeError("Wrong type")
+        elif not len(name):
+            raise ValueError("Name can't be empty")
+        self.__name = name
+    
+    def getName(self):
+        return self.__name
+
+    def setSurname(self, surname):
+        if not isinstance(surname, str):
+            raise TypeError("Wrong type")
+        elif not len(surname):
+            raise ValueError("Surname can't be empty")
+        self.__surname = surname
+
+    def getSurname(self):
+        return self.__surname
+
+    def setNumber(self, number):
+        if isinstance(number, int):
+            raise TypeError("Wrong type")
+        elif number < 0:
+            raise ValueError("Wrong number of record book")
+        self.__number = number
+
+    def getNumber(self):
+        return self.__number
+
+    def setEvaluation(self, evaluation):
+        if not isinstance(evaluation, list):
+            raise TypeError("Wrong type")
+        elif not all(isinstance(x, int) for x in evaluation) or not all(x > 0 and x <= 5 for x in evaluation) or len(evaluation) < 5 or len(evaluation) > 5:
+            raise ValueError("Wrong data")
+        self.__evaluation = evaluation
+
+    def getEvauation(self):
+        return self.__evaluation
 
     def AverageScore(self):
-        res = 0
-        for i in self.__evaluation:
-            res += i
-        res /= len(self.__evaluation)
-        return round(res)
+        return round(sum(self.__evaluation) / len(self.__evaluation))
 
-    def studentInfo(self):
-        return f'Student: {self.FullName()}. Record book number: {self.__number}. Evaluation: {self.Evauation()}. Average score: {self.AverageScore()}'
+MAX_STUDENTS = 20
 
 class Group:
     def __init__(self):
@@ -32,13 +63,19 @@ class Group:
 
     def AddStudent(self, student):
         if not isinstance(student, Student):
-            raise TypeError("Wrong type of variables")
-        elif len(self.__group) == 20:
+            raise TypeError("Wrong type of variable")
+        elif len(self.__group) == MAX_STUDENTS:
             raise IndexError("Maximum number of students")
-        self.__group.append(student)
-        self.SortGroup()
 
-    def SortGroup(self):
+        for st in self.__group:
+            if st.FullName() == student.FullName():
+                raise ValueError("Such a student already exists")
+            elif st.getNumber() == student.getNumber():
+                raise ValueError("Record book number already exists")
+        self.__group.append(student)
+        self.__SortGroup()
+
+    def __SortGroup(self):
         values = []
         for st in self.__group:
             values.append(st.AverageScore())
@@ -60,7 +97,7 @@ class Group:
 
     def FullList(self):
         if not len(self.__group):
-            return None
+            raise ValueError("Group is empty")
         info = ""
         for i in range(0, len(self.__group)):
             info += f'#{i + 1} {self.__group[i].FullName()}: {self.__group[i].AverageScore()}' + '\n'
