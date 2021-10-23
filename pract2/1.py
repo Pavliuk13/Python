@@ -12,26 +12,25 @@ class Product:
         return self.__price
 
     def getInfo(self):
-        return f'Priсe: {self.__price}$, Description: {self.__desc}, Height: {self.__dimention[0]}mm, Width: {self.__dimention[1]}mm, Length: {self.__dimention[2]}mm'
+        return f'Priсe: {self.__price}$, Description: {self.__desc}, Height: {self.__dimention[0]}m, Width: {self.__dimention[1]}m, Length: {self.__dimention[2]}m'
 
 
 
 class Client:
-    def __init__(self, surname, name, patronymic, phone, age):
-        if not isinstance(name, str) or not isinstance(surname, str) or not isinstance(patronymic, str) or not isinstance(phone, str) or not isinstance(age, int):
+    def __init__(self, surname, name, patronymic, phone):
+        if not isinstance(name, str) or not isinstance(surname, str) or not isinstance(patronymic, str) or not isinstance(phone, str):
             raise TypeError("Wrong type of variables")
-        elif not len(name) or not len(surname) or not len(patronymic) or not len(phone) or age < 18:
+        elif not len(name) or not len(surname) or not len(patronymic) or not len(phone):
             raise ValueError("Not correct data")
         self.__name = name
         self.__surname = surname
         self.__patronymic = patronymic
         self.__phone = phone
-        self.__age = age
     def getFullName(self):
         return f'{self.__surname} {self.__name} {self.__patronymic}'
 
     def getInfo(self):
-        return f'Client {self.getFullName()}\nAge: {self.__age}, Phone: {self.__phone}'
+        return f'Client {self.getFullName()}\nPhone: {self.__phone}'
         
 
 class Order:
@@ -70,9 +69,9 @@ class Order:
 
 if __name__ == "__main__":     
     try:
-        client1 = Client("Plisiuk", "Nazar", "Valentinovich", "986254563", 20)
-        client2 = Client("Karpiuk", "Alina", "Olexandrivna", "986254563", 24)
-        client3 = Client("Subitskiy", "Pavlo", "Romanovich", "986254563", 18)
+        client1 = Client("Plisiuk", "Nazar", "Valentinovich", "986254563")
+        client2 = Client("Karpiuk", "Alina", "Olexandrivna", "986254563")
+        client3 = Client("Subitskiy", "Pavlo", "Romanovich", "986254563")
         
         prod1 = Product(1.1, "Product 1", [1.0, 1.1, 1.2])
         prod2 = Product(2.2, "Product 2", [2.1, 2.2, 2.3])
@@ -99,16 +98,16 @@ if __name__ == "__main__":
         print(order.fullPriceOfOrder(client3) + '\n') # Subitskiy Pavlo Romanovich: 3.3$
         # show all orders
         print(order.DataBase())
-                                # Client Plisiuk Nazar Valentinovich
-                                # Age: 20, Phone: 986254563
-                                # Priсe: 1.1$, Description: Product 1, Height: 1.0mm, Width: 1.1mm, Length: 1.2mm
-                                # Priсe: 5.6$, Description: Product 5, Height: 5.1mm, Width: 5.2mm, Length: 5.3mm
-                                # Client Karpiuk Alina Olexandrivna
-                                # Age: 24, Phone: 986254563
-                                # Priсe: 2.2$, Description: Product 2, Height: 2.1mm, Width: 2.2mm, Length: 2.3mm
-                                # Priсe: 4.4$, Description: Product 4, Height: 4.1mm, Width: 4.2mm, Length: 4.3mm
-                                # Client Subitskiy Pavlo Romanovich
-                                # Age: 18, Phone: 986254563
-                                # Priсe: 3.3$, Description: Product 3, Height: 3.1mm, Width: 3.2mm, Length: 3.3mm
+                                    # Client Plisiuk Nazar Valentinovich
+                                    # Phone: 986254563
+                                    # Priсe: 1.1$, Description: Product 1, Height: 1.0m, Width: 1.1m, Length: 1.2m
+                                    # Priсe: 5.6$, Description: Product 5, Height: 5.1m, Width: 5.2m, Length: 5.3m
+                                    # Client Karpiuk Alina Olexandrivna
+                                    # Phone: 986254563
+                                    # Priсe: 2.2$, Description: Product 2, Height: 2.1m, Width: 2.2m, Length: 2.3m
+                                    # Priсe: 4.4$, Description: Product 4, Height: 4.1m, Width: 4.2m, Length: 4.3m
+                                    # Client Subitskiy Pavlo Romanovich
+                                    # Phone: 986254563
+                                    # Priсe: 3.3$, Description: Product 3, Height: 3.1m, Width: 3.2m, Length: 3.3m
     except Exception as ex:
         print(ex) 
