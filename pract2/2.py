@@ -2,9 +2,11 @@ import re
 
 class Statistic:
     def __init__(self, name):
+        if not isinstance(name, str):
+            raise TypeError("Name should be a string")
         if not len(name):
             raise ValueError("Not correct data")
-        elif not open(name, "r"):
+        if not open(name, "r"):
             raise FileNotFoundError("File not found")
         self.__name = name
 

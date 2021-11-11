@@ -2,7 +2,7 @@ class Node:
     def __init__(self, code = None, price = None):
         if not isinstance(code, int) or not isinstance(price, float):
             raise TypeError("Wrong type of variables")
-        elif code < 0 or price <= 0:
+        if code < 0 or price <= 0:
             raise ValueError("Not correct data")
         self.code = code
         self.price = price
@@ -19,13 +19,13 @@ class Tree:
         else:
             self._insert(code, price, self.root)
 
-    def _insert(self, code, price, cur_node):
+    def _insert(self, code, price, cur_node: Node):
         if code < cur_node.code:
             if not cur_node.left_child:
                 cur_node.left_child = Node(code, price)
             else:
                 return self._insert(code, price, cur_node.left_child)
-        elif code > cur_node.code:
+        if code > cur_node.code:
             if not cur_node.right_child:
                 cur_node.right_child = Node(code, price)
             else:
@@ -34,7 +34,7 @@ class Tree:
     def search(self, code, count):
         if not isinstance(code, int) or not isinstance(count, int):
             raise TypeError("Wrong type of variables")
-        elif code < 0 or count <= 0:
+        if code < 0 or count <= 0:
             raise ValueError("Not correct data")
 
         if self.root:
@@ -42,7 +42,7 @@ class Tree:
         else:
             return 0
 
-    def _search(self, code, count, cur_node):
+    def _search(self, code, count, cur_node: Node):
         if code == cur_node.code:
             return cur_node.price * count
         elif code < cur_node.code and cur_node.left_child:

@@ -4,42 +4,44 @@ class Rational:
     def __init__(self, numerator = 1, denumerator = 2):
         if not denumerator:
             raise ZeroDivisionError("Error: denumerator == 0")
-        elif not isinstance(numerator, int) or not isinstance(denumerator, int):
+        if not isinstance(numerator, int) or not isinstance(denumerator, int):
             raise TypeError("Wrong type of arguments")
         n = gcd(numerator, denumerator)
-        self.__nummerator = int(numerator / n)
-        self.__denumerator = int(denumerator / n)
+        self.__nummerator = numerator // n
+        self.__denumerator =denumerator // n
 
     def __add__(self, item):
-        self.__nummerator *= item.getDenumerator()
-        num = self.__denumerator * item.getNumerator()
+        self.__nummerator *= item.denumerator
+        num = self.__denumerator * item.numerator
         self.__nummerator += num
-        self.__denumerator *= item.getDenumerator()
+        self.__denumerator *= item.denumerator
         return Rational(self.__nummerator, self.__denumerator)
 
     def __sub__(self, item):
-        self.__nummerator *= item.getDenumerator()
-        num = self.__denumerator * item.getNumerator()
+        self.__nummerator *= item.denumerator
+        num = self.__denumerator * item.numerator
         self.__nummerator -= num
-        self.__denumerator *= item.getDen()
+        self.__denumerator *= item.denumerator
         return Rational(self.__nummerator, self.__denumerator)
 
     def __mul__(self, item):
-        return Rational(self.__nummerator * item.getNum(), self.__denumerator * item.getDen()) 
+        return Rational(self.__nummerator * item.numerator, self.__denumerator * item.denumerator) 
 
     def __truediv__(self, item):
-        return Rational(self.__nummerator * item.getDen(), self.__denumerator * item.getNum())
+        return Rational(self.__nummerator * item.denumerator, self.__denumerator * item.numerator)
 
-    def showData(self):
-        return str(self.__nummerator) + "/" + str(self.__denumerator)
+    def show_data(self):
+        return f'{self.__nummerator}/{self.__denumerator}'
     
-    def showPoint(self):
+    def show_point(self):
         return self.__nummerator / self.__denumerator
     
-    def getNumerator(self):
+    @property
+    def numerator(self):
         return self.__nummerator
     
-    def getDenumerator(self):
+    @property
+    def denumerator(self):
         return self.__denumerator
 
 
@@ -47,15 +49,15 @@ class Rational:
 if __name__ == "__main__":
     try:
         rational = Rational(9, 45)
-        print(rational.showData()) # 1/5
-        print(rational.showPoint()) # 0.2
+        print(rational.show_data()) # 1/5
+        print(rational.show_point()) # 0.2
 
         test = Rational(5, 55)
-        print(test.showData()) # 1/11
-        print(test.showPoint()) # 0.090909090909
+        print(test.show_data()) # 1/11
+        print(test.show_point()) # 0.090909090909
 
         obj = rational + test
-        print(obj.showData()) # 16/55
+        print(obj.show_data()) # 16/55
 
     except Exception as ex:
         print(ex)
