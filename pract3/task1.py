@@ -12,7 +12,7 @@ class ITEvent:
             raise TypeError("Wrong type of variables")
         if not desc or price <= 0:
             raise ValueError("Wrong data")
-        # self._date = ITEvent.check_date(date)
+
         self._date = date
         self._desc = desc
         self._price = price
@@ -27,7 +27,7 @@ class ITEvent:
             raise TypeError("Wrong type of variables")
         if not ITEvent.check_date(date):
             raise ValueError("Wrong data")
-        # self._date = ITEvent.check_date(date)
+
         self._date = date
 
     @property
@@ -298,12 +298,11 @@ def main():
     
     ticket5 = find("0")
     print(ticket5)
-                            # Customer: Vasiliy Pavliuk
-                            # Event: KPI-Open
-                            # Date of event: 31/12/2021
-                            # Order date: 5/9/2021
-                            # Type of ticket: advance
-                            # Price: 210.0$
-                            # Phone: 380639746908
+                                # Customer: Vasiliy Pavliuk 380639746908
+                                # Event: KPI-Open
+                                # Date of event: 31/12/2021
+                                # Order date: 5/9/2021
+                                # Type of ticket: student
+                                # Price: 175.0$
 
 main()
