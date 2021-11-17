@@ -1,4 +1,5 @@
 from datetime import datetime
+from const import LATE, ADVANCE
 import re
 import json
 import itertools
@@ -231,10 +232,10 @@ def order(event: ITEvent, customer: Customer, date):
         date_event = datetime.strptime(event.date, "%d/%m/%Y")
         t_days = (date_event - date_order).days
 
-        if t_days >= 60:
+        if t_days >= ADVANCE:
             ticket = Advance(event, date)
 
-        elif 0 <= t_days < 10:
+        elif 0 <= t_days < LATE:
             ticket = Late(event, date)
 
         elif t_days < 0:

@@ -1,0 +1,2 @@
+LATE = 10
+ADVANCE = 60
