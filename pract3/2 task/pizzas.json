@@ -1,0 +1,30 @@
+{
+    "Margherita":{
+        "price": 100,
+        "ingredients": ["tomatoes", "cheese", "basil"]
+    },
+    "Cheese":{
+        "price": 150,
+        "ingredients": ["pizza sauce", "provolone cheese", "mozzarella cheese", "parmesan cheese"]
+    },
+    "Veggie":{
+        "price": 200,
+        "ingredients": ["pizza sauce", "spinach", "mozzarella", "artichoke", "bell pepper", "red onion", "cherry tomatoes", "olives", "almonds"]
+    },
+    "Pepperoni":{
+        "price": 250,
+        "ingredients": ["tomato sauce", "parmesan cheese", "dried oregano", "mozzarella cheese", "pepperoni"]
+    },
+    "Meat":{
+        "price": 125,
+        "ingredients": ["pepperoni", "ham", "bacon"]
+    },
+    "Hawaiian":{
+        "price": 170,
+        "ingredients": ["pizza sauce", "mozzarella cheese", "ham", "pineapple chunks", "bacon"]
+    },
+    "Buffalo":{
+        "price": 199,
+        "ingredients": ["hot sauce", "garlic powder", "chicken", "mozzarella", "blue cheese", "red onion", "green onions"]
+    }
+}

@@ -1,0 +1,39 @@
+{
+    "8ebca47e-47bf-11ec-bed9-74d02b736a48": {
+        "_name": "Margherita",
+        "_price": 100,
+        "_ingredients": [
+            "tomatoes",
+            "cheese",
+            "basil"
+        ],
+        "_add_ingredients": [
+            "pineapple",
+            "corn"
+        ],
+        "_day": "Monday",
+        "count": 5,
+        "price": 500
+    },
+    "8ebe77bb-47bf-11ec-a3be-74d02b736a48": {
+        "_name": "Buffalo",
+        "_price": 199,
+        "_ingredients": [
+            "hot sauce",
+            "garlic powder",
+            "chicken",
+            "mozzarella",
+            "blue cheese",
+            "red onion",
+            "green onions"
+        ],
+        "_add_ingredients": [
+            "mushrooms",
+            "chili pepper",
+            "olives"
+        ],
+        "_day": "Sunday",
+        "count": 21,
+        "price": 4179
+    }
+}
