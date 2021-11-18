@@ -1,5 +1,5 @@
 from datetime import datetime
-from const import LATE, ADVANCE
+from const import LATE, ADVANCE, END_EVENT
 import re
 import json
 import itertools
@@ -235,10 +235,10 @@ def order(event: ITEvent, customer: Customer, date):
         if t_days >= ADVANCE:
             ticket = Advance(event, date)
 
-        elif 0 <= t_days < LATE:
+        elif END_EVENT <= t_days < LATE:
             ticket = Late(event, date)
 
-        elif t_days < 0:
+        elif t_days < END_EVENT:
             raise ValueError("Event is over")
 
         else:

@@ -1,6 +1,6 @@
 import json
 import uuid
-from constants import DAYS, ADDITIONAL_INGREDIENTS
+from constants import DAYS, ADDITIONAL_INGREDIENTS, PIZZA_FILE, ORDER_FILE
 
 class Pizza:
     """The main class that describes pizza"""
@@ -9,9 +9,10 @@ class Pizza:
             raise TypeError("Wrong type of additional ingredients")
         if not all(i in ADDITIONAL_INGREDIENTS for i in add_ingredients):
             raise ValueError("Wrong ingredient")
-        self._name = name
-        with open("pizzas.json", "r") as file:
+
+        with open(PIZZA_FILE, "r") as file:
             data = json.load(file)
+        self._name = name
         self._price = data[name]["price"]
         self._ingredients = data[name]["ingredients"]
         self._add_ingredients = add_ingredients
@@ -86,7 +87,7 @@ def order(day, count, add_ingredients):
 
     pizza = create_obj(index, add_ingredients)
     
-    with open("order.json", "r") as file:
+    with open(ORDER_FILE, "r") as file:
         data = json.load(file)
 
     id_of_order = str(uuid.uuid1())
@@ -95,7 +96,7 @@ def order(day, count, add_ingredients):
     data[id_of_order]["count"] = count
     data[id_of_order]["price"] = pizza.price * count
 
-    with open("order.json", "w") as file:
+    with open(ORDER_FILE, "w") as file:
         json.dump(data, file, indent = 4)
 
     return f'Id of order: {id_of_order}:\n{pizza.__str__()}\nCount: {count}\nTotal price: {pizza.price * count}'
