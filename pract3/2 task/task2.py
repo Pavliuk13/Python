@@ -106,7 +106,7 @@ def find(id_of_order):
     if not isinstance(id_of_order, str):
         raise TypeError("Wrong type of id")
     
-    with open("order.json", "r") as file:
+    with open(ORDER_FILE, "r") as file:
         data = json.load(file)
 
     if not data.get(id_of_order):
