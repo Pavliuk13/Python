@@ -5,9 +5,9 @@ class AddValues:
     """ A class that stores the value you want to add to the date """
     def __init__(self, value) -> None:
         if not isinstance(value, int):
-            raise TypeError("Wrong type of 'day' variable")
+            raise TypeError("Wrong type of variable")
         if value < 0:
-            raise ValueError("Wrong value of 'day' variable")
+            raise ValueError("Wrong value of variable")
         self.__value = value
 
     @property
@@ -36,11 +36,6 @@ class Year(AddValues):
 class Calendar:
     """ Class calendar that stores the date """
     def __init__(self, day, month, year):
-        if not isinstance(day, int) or not isinstance(month, int) or not isinstance(year, int):
-            raise TypeError("Wrong type of date")
-        if not FIRST_MONTH <= month <= LAST_MONTH or year < START_YEAR:
-            raise ValueError("Wrong value of variables")
-
         self.year = year
         self.month = month
         self.day = day
@@ -68,9 +63,7 @@ class Calendar:
 
     def __is_leap(self) -> bool:
         """ a function that determines whether a year is leap """
-        if self.year % 4 == 0 and self.year % 100 != 0 or self.year % 400 == 0:
-            return True
-        return False
+        return not self.year % 4 and self.year % 100 or not self.year % 400
             
     @property
     def month(self) -> int:

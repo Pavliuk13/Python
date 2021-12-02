@@ -21,7 +21,10 @@ class Rational:
         """ getter for the denumerator """
         return self.__denumerator
 
-
+    def reduction(self):
+        n = gcd(self.__numerator, self.__denumerator)
+        self.__numerator //= n
+        self.__denumerator //= n
 
     def __add__(self, item):
         """ adding two rational numbers and adding an integer to a rational one """
@@ -36,6 +39,22 @@ class Rational:
         self.__denumerator *= item.denumerator
         return Rational(self.__numerator, self.__denumerator)
 
+    def __iadd__(self, item):
+        """ adding two rational numbers and adding an integer to a rational one """
+        if not isinstance(item, Rational) and not isinstance(item, int):
+            raise TypeError("Wrong type")
+
+        if isinstance(item, int):
+            item = Rational(item, 1)
+
+        self.__numerator *= item.denumerator
+        self.__numerator += self.__denumerator * item.numerator
+        self.__denumerator *= item.denumerator
+
+        self.reduction()
+
+        return self
+
     def __sub__(self, item):
         """ the difference of two rational numbers and the difference of an integer to a rational one """
         if not isinstance(item, Rational) and not isinstance(item, int):
@@ -49,6 +68,22 @@ class Rational:
         self.__denumerator *= item.denumerator
         return Rational(self.__numerator, self.__denumerator)
 
+    def __isub__(self, item):
+        """ the difference of two rational numbers and the difference of an integer to a rational one """
+        if not isinstance(item, Rational) and not isinstance(item, int):
+            raise TypeError("Wrong type")
+
+        if isinstance(item, int):
+            item = Rational(item, 1)
+        
+        self.__numerator *= item.denumerator
+        self.__numerator -= self.__denumerator * item.numerator
+        self.__denumerator *= item.denumerator
+
+        self.reduction()
+
+        return self
+
     def __mul__(self, item):
         """ multiplication of two rational numbers and multiplication of an integer to a rational one """
         if not isinstance(item, Rational) and not isinstance(item, int):
@@ -59,6 +94,21 @@ class Rational:
 
         return Rational(self.__numerator * item.numerator, self.__denumerator * item.denumerator) 
 
+    def __imul__(self, item):
+        """ multiplication of two rational numbers and multiplication of an integer to a rational one """
+        if not isinstance(item, Rational) and not isinstance(item, int):
+            raise TypeError("Wrong type")
+
+        if isinstance(item, int):
+            item = Rational(item, 1)
+
+        self.__numerator *= item.numerator
+        self.__denumerator *= item.denumerator
+
+        self.reduction()
+
+        return self
+
     def __truediv__(self, item):
         """division of two rational numbers and division of an integer to a rational one"""
         if not isinstance(item, Rational) and not isinstance(item, int):
@@ -68,6 +118,21 @@ class Rational:
             item = Rational(item, 1)
         
         return Rational(self.__numerator * item.denumerator, self.__denumerator * item.numerator)
+
+    def __itruediv__(self, item):
+        """division of two rational numbers and division of an integer to a rational one"""
+        if not isinstance(item, Rational) and not isinstance(item, int):
+            raise TypeError("Wrong type")
+
+        if isinstance(item, int):
+            item = Rational(item, 1)
+
+        self.__numerator *= item.denumerator
+        self.__denumerator *= item.numerator
+        
+        self.reduction()
+
+        return self
 
     def __eq__(self, item):
         """ checking the equality of two rational numbers """
