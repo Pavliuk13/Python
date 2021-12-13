@@ -1,0 +1,31 @@
+[
+    {
+        "_name": "Java",
+        "_teacher": {
+            "_full_name": "Yurii Adamovich Tarnavskiy",
+            "_courses": [
+                "Java"
+            ]
+        },
+        "_themes": [
+            "OOP",
+            "Strings"
+        ],
+        "_type": "Local"
+    },
+    {
+        "_name": "Telegram on Python",
+        "_teacher": {
+            "_full_name": "Pavel Valeriyovich Durov",
+            "_courses": [
+                "Python",
+                "C++"
+            ]
+        },
+        "_themes": [
+            "Bot",
+            "OOP"
+        ],
+        "_type": "Offsite"
+    }
+]
