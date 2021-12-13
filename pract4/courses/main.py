@@ -152,8 +152,6 @@ class Teacher(ITeacher):
         """setter for courses"""
         if not isinstance(courses, list):
             raise TypeError("Wrong type of 'courses' variable")
-        if not courses:
-            raise ValueError("Courses list can't be empty")
         self._courses = courses
 
     def __str__(self):
@@ -207,6 +205,16 @@ class CourseFactory(ICourseFactory):
         else:
             raise ValueError("Wrong type of courses")
 
+        with open(self.__teachers_path, "r") as file:
+            data = json.load(file)
+
+        for item in data:
+            if item["_full_name"] == teacher.full_name:
+                item["_courses"].append(name)
+
+        with open(self.__teachers_path, "w") as file:
+            json.dump(data, file, indent=4)
+
         with open(self.__courses_path, "r") as file:
             data = json.load(file)
 
@@ -218,9 +226,9 @@ class CourseFactory(ICourseFactory):
 
         return course
 
-    def create_teacher(self, full_name, courses):
+    def create_teacher(self, full_name):
         """a function that creates a teacher in an academy"""
-        teacher = Teacher(full_name, courses)
+        teacher = Teacher(full_name, [])
 
         with open(self.__teachers_path, "r") as file:
             data = json.load(file)
@@ -264,12 +272,18 @@ def all_courses(path):
 
 if __name__ == "__main__":
     factory = CourseFactory("courses.json", "teachers.json")
-    teacher1 = factory.create_teacher("Pavel Valeriyovich Durov", ["Python", "C++"])
-    teacher2 = factory.create_teacher("Yurii Adamovich Tarnavskiy", ["Java"])
+    teacher1 = factory.create_teacher("Pavel Valeriyovich Durov")
+    teacher2 = factory.create_teacher("Yurii Adamovich Tarnavskiy")
     course1 = factory.create_course("Local", "Java", teacher2, ["OOP", "Strings"])
     course2 = factory.create_course("Offsite", "Telegram on Python", teacher1, ["Bot", "OOP"])
-    print(teacher1)
-    print(teacher2)
-    print(course1)
-    print(course2)
+
+    all_c = all_courses("courses.json")
+    all_t = all_teachers("teachers.json")
+    for item in all_c:
+        print(item)
+        print()
+
+    for item in all_t:
+        print(item)
+        print()
 
