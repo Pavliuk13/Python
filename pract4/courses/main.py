@@ -211,6 +211,7 @@ class CourseFactory(ICourseFactory):
         for item in data:
             if item["_full_name"] == teacher.full_name:
                 item["_courses"].append(name)
+                teacher.courses = item["_courses"]
 
         with open(self.__teachers_path, "w") as file:
             json.dump(data, file, indent=4)

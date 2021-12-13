@@ -3,7 +3,9 @@
         "_name": "Java",
         "_teacher": {
             "_full_name": "Yurii Adamovich Tarnavskiy",
-            "_courses": []
+            "_courses": [
+                "Java"
+            ]
         },
         "_themes": [
             "OOP",
@@ -15,7 +17,9 @@
         "_name": "Telegram on Python",
         "_teacher": {
             "_full_name": "Pavel Valeriyovich Durov",
-            "_courses": []
+            "_courses": [
+                "Telegram on Python"
+            ]
         },
         "_themes": [
             "Bot",
