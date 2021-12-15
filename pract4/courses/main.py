@@ -18,7 +18,7 @@ class ICourse(ABC):
 
     @teacher.setter
     @abstractmethod
-    def teacher(self): pass
+    def teacher(self, teacher): pass
 
     @property
     @abstractmethod
@@ -26,7 +26,7 @@ class ICourse(ABC):
 
     @themes.setter
     @abstractmethod
-    def themes(self): pass
+    def themes(self, themes): pass
 
 
 class ILocalCourse(ABC):
@@ -68,7 +68,7 @@ class ICourseFactory(ABC):
     def create_course(self, type_course, name, teacher, themes): pass
 
     @abstractmethod
-    def create_teacher(self, full_name, courses): pass
+    def create_teacher(self, full_name): pass
 
 
 class Course(ICourse):
@@ -100,9 +100,9 @@ class Course(ICourse):
     @teacher.setter
     def teacher(self, teacher):
         """setter for teacher of course"""
-        if not isinstance(teacher, Teacher):
+        if not isinstance(teacher, str):
             raise TypeError("Wrong type of 'teacher' variable")
-        self._teacher = vars(teacher)
+        self._teacher = teacher
 
     @property
     def themes(self):
@@ -119,7 +119,37 @@ class Course(ICourse):
         self._themes = themes
 
     def __str__(self):
-        return f'Name of course: {self.name}\nTeacher: {self.teacher["_full_name"]}\nThemes:{",".join(self.themes)}'
+        return f'Name of course: {self.name}\nTeacher: {self.teacher}\nThemes:{",".join(self.themes)}'
+
+
+class LocalCourse(Course, ILocalCourse):
+    """Class for local courses"""
+    def __init__(self, name, teacher, themes):
+        super().__init__(name, teacher, themes)
+        self._type = 'Local'
+
+    @property
+    def type(self):
+        """getter for course type"""
+        return self._type
+
+    def __str__(self):
+        return f'{super().__str__()}\nType: {self.type}'
+
+
+class OffsiteCourse(Course, IOffsiteCourse):
+    """Class for offsite courses"""
+    def __init__(self, name, teacher, themes):
+        super().__init__(name, teacher, themes)
+        self._type = 'Offsite'
+
+    @property
+    def type(self):
+        """getter for course type"""
+        return self._type
+
+    def __str__(self):
+        return f'{super().__str__()}\nType: {self.type}'
 
 
 class Teacher(ITeacher):
@@ -158,36 +188,6 @@ class Teacher(ITeacher):
         return f'Full name: {self.full_name}\nCourses: {",".join(self.courses)}'
 
 
-class LocalCourse(Course, ILocalCourse):
-    """Class for local courses"""
-    def __init__(self, name, teacher, themes):
-        super().__init__(name, teacher, themes)
-        self._type = 'Local'
-
-    @property
-    def type(self):
-        """getter for course type"""
-        return self._type
-
-    def __str__(self):
-        return f'{super().__str__()}\nType: {self.type}'
-
-
-class OffsiteCourse(Course, IOffsiteCourse):
-    """Class for offsite courses"""
-    def __init__(self, name, teacher, themes):
-        super().__init__(name, teacher, themes)
-        self._type = 'Offsite'
-
-    @property
-    def type(self):
-        """getter for course type"""
-        return self._type
-
-    def __str__(self):
-        return f'{super().__str__()}\nType: {self.type}'
-
-
 class CourseFactory(ICourseFactory):
     """Class for course factory"""
     def __init__(self, courses_path, teachers_path):
@@ -199,11 +199,11 @@ class CourseFactory(ICourseFactory):
         if not isinstance(type_course, str):
             raise TypeError("Wrong type for 'type_course' variable")
         if type_course == 'Local':
-            course = LocalCourse(name, teacher, themes)
+            course = LocalCourse(name, teacher.full_name, themes)
         elif type_course == 'Offsite':
-            course = OffsiteCourse(name, teacher, themes)
+            course = OffsiteCourse(name, teacher.full_name, themes)
         else:
-            raise ValueError("Wrong type of courses")
+            raise ValueError("Wrong type of course")
 
         with open(self.__teachers_path, "r") as file:
             data = json.load(file)
@@ -212,6 +212,9 @@ class CourseFactory(ICourseFactory):
             if item["_full_name"] == teacher.full_name:
                 item["_courses"].append(name)
                 teacher.courses = item["_courses"]
+
+        if course.name not in teacher.courses:
+            raise ValueError("Teacher does not exist")
 
         with open(self.__teachers_path, "w") as file:
             json.dump(data, file, indent=4)
@@ -261,12 +264,10 @@ def all_courses(path):
     for item in data:
         if item["_type"] == "Local":
             courses.append(
-                LocalCourse(item["_name"], Teacher(item["_teacher"]["_full_name"], item["_teacher"]["_courses"]),
-                            item["_themes"]))
+                LocalCourse(item["_name"], item["_teacher"], item["_themes"]))
         else:
             courses.append(
-                OffsiteCourse(item["_name"], Teacher(item["_teacher"]["_full_name"], item["_teacher"]["_courses"]),
-                            item["_themes"]))
+                OffsiteCourse(item["_name"], item["_teacher"], item["_themes"]))
 
     return courses
 
@@ -276,15 +277,18 @@ if __name__ == "__main__":
     teacher1 = factory.create_teacher("Pavel Valeriyovich Durov")
     teacher2 = factory.create_teacher("Yurii Adamovich Tarnavskiy")
     course1 = factory.create_course("Local", "Java", teacher2, ["OOP", "Strings"])
-    course2 = factory.create_course("Offsite", "Telegram on Python", teacher1, ["Bot", "OOP"])
+    course2 = factory.create_course("Offsite", "Telegram", teacher1, ["Bots", "OOP"])
+    course3 = factory.create_course('Local', 'Python', teacher1, ['OOP', 'Django', 'Flask'])
 
-    all_c = all_courses("courses.json")
-    all_t = all_teachers("teachers.json")
-    for item in all_c:
-        print(item)
-        print()
+    print(teacher1)
 
-    for item in all_t:
-        print(item)
-        print()
+    # all_c = all_courses("courses.json")
+    # all_t = all_teachers("teachers.json")
+    # for item in all_c:
+    #     print(item)
+    #     print()
+    #
+    # for item in all_t:
+    #     print(item)
+    #     print()
 
