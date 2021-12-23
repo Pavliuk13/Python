@@ -1,81 +1,14 @@
-from abc import ABC, abstractmethod
-import json
-
-
-class ICourse(ABC):
-    """Interface for courses"""
-    @property
-    @abstractmethod
-    def name(self): pass
-
-    @name.setter
-    @abstractmethod
-    def name(self, name): pass
-
-    @property
-    @abstractmethod
-    def teacher(self): pass
-
-    @teacher.setter
-    @abstractmethod
-    def teacher(self, teacher): pass
-
-    @property
-    @abstractmethod
-    def themes(self): pass
-
-    @themes.setter
-    @abstractmethod
-    def themes(self, themes): pass
-
-
-class ILocalCourse(ABC):
-    """Interface for local courses"""
-    @property
-    @abstractmethod
-    def type(self): pass
-
-
-class IOffsiteCourse(ABC):
-    """Interface for offsite courses"""
-    @property
-    @abstractmethod
-    def type(self): pass
-
-
-class ITeacher(ABC):
-    """Interface for teachers"""
-    @property
-    @abstractmethod
-    def full_name(self): pass
-
-    @full_name.setter
-    @abstractmethod
-    def full_name(self, full_name): pass
-
-    @property
-    @abstractmethod
-    def courses(self): pass
-
-    @courses.setter
-    @abstractmethod
-    def courses(self, courses): pass
-
-
-class ICourseFactory(ABC):
-    """Interface for courses factory"""
-    @abstractmethod
-    def create_course(self, type_course, name, teacher, themes): pass
-
-    @abstractmethod
-    def create_teacher(self, full_name): pass
+from interfaces import *
+from uuid import uuid4
+from pymongo import MongoClient
+from config import host, db, teachers_collection, courses_collection
 
 
 class Course(ICourse):
     """Class for courses"""
-    def __init__(self, name, teacher, themes):
+    def __init__(self, name, teachers, themes):
         self.name = name
-        self.teacher = teacher
+        self.teachers = teachers
         self.themes = themes
 
     @property
@@ -93,16 +26,16 @@ class Course(ICourse):
         self._name = name
 
     @property
-    def teacher(self):
-        """getter for teacher of course"""
-        return self._teacher
+    def teachers(self):
+        """getter for teachers of course"""
+        return self._teachers
 
-    @teacher.setter
-    def teacher(self, teacher):
-        """setter for teacher of course"""
-        if not isinstance(teacher, str):
+    @teachers.setter
+    def teachers(self, teachers):
+        """setter for teachers of course"""
+        if not isinstance(teachers, list):
             raise TypeError("Wrong type of 'teacher' variable")
-        self._teacher = teacher
+        self._teachers = teachers
 
     @property
     def themes(self):
@@ -118,14 +51,22 @@ class Course(ICourse):
             raise ValueError("Themes list can't be empty")
         self._themes = themes
 
+    def add_teacher(self, teacher_name):
+        """add teacher for current course"""
+        if not isinstance(teacher_name, str):
+            raise TypeError("Wrong type of 'teacher_name' variable")
+        if not teacher_name:
+            raise ValueError("'teacher_name' can't be empty")
+        self._teachers.append(teacher_name)
+
     def __str__(self):
-        return f'Name of course: {self.name}\nTeacher: {self.teacher}\nThemes:{",".join(self.themes)}'
+        return f'Name of course: {self.name}\nTeachers: {",".join(self.teachers)}\nThemes:{",".join(self.themes)}'
 
 
 class LocalCourse(Course, ILocalCourse):
     """Class for local courses"""
-    def __init__(self, name, teacher, themes):
-        super().__init__(name, teacher, themes)
+    def __init__(self, name, teachers, themes):
+        super().__init__(name, teachers, themes)
         self._type = 'Local'
 
     @property
@@ -139,8 +80,8 @@ class LocalCourse(Course, ILocalCourse):
 
 class OffsiteCourse(Course, IOffsiteCourse):
     """Class for offsite courses"""
-    def __init__(self, name, teacher, themes):
-        super().__init__(name, teacher, themes)
+    def __init__(self, name, teachers, themes):
+        super().__init__(name, teachers, themes)
         self._type = 'Offsite'
 
     @property
@@ -184,49 +125,43 @@ class Teacher(ITeacher):
             raise TypeError("Wrong type of 'courses' variable")
         self._courses = courses
 
+    def add_course(self, course_name):
+        """add course for teacher"""
+        if not isinstance(course_name, str):
+            raise TypeError("Wrong value for 'course_name' variable")
+        if not course_name:
+            raise ValueError("'course_name' can't be empty")
+        self._courses.append(course_name)
+
     def __str__(self):
         return f'Full name: {self.full_name}\nCourses: {",".join(self.courses)}'
 
 
 class CourseFactory(ICourseFactory):
     """Class for course factory"""
-    def __init__(self, courses_path, teachers_path):
-        self.__courses_path = courses_path
-        self.__teachers_path = teachers_path
+    def __init__(self):
+        self.client = MongoClient(host)
+        self.db = self.client[db]
+        self.teachers = self.db[teachers_collection]
+        self.courses = self.db[courses_collection]
 
-    def create_course(self, type_course, name, teacher, themes):
+    def create_course(self, type_course, name, themes):
         """a function that creates a course in an academy"""
         if not isinstance(type_course, str):
             raise TypeError("Wrong type for 'type_course' variable")
         if type_course == 'Local':
-            course = LocalCourse(name, teacher.full_name, themes)
+            course = LocalCourse(name, [], themes)
         elif type_course == 'Offsite':
-            course = OffsiteCourse(name, teacher.full_name, themes)
+            course = OffsiteCourse(name, [], themes)
         else:
             raise ValueError("Wrong type of course")
 
-        with open(self.__teachers_path, "r") as file:
-            data = json.load(file)
+        check = self.courses.find_one({"name": name})
+        if check:
+            raise ValueError("Course is registered in the system")
 
-        for item in data:
-            if item["_full_name"] == teacher.full_name:
-                item["_courses"].append(name)
-                teacher.courses = item["_courses"]
-
-        if course.name not in teacher.courses:
-            raise ValueError("Teacher does not exist")
-
-        with open(self.__teachers_path, "w") as file:
-            json.dump(data, file, indent=4)
-
-        with open(self.__courses_path, "r") as file:
-            data = json.load(file)
-
-        to_json = vars(course)
-        data.append(to_json)
-
-        with open(self.__courses_path, "w") as file:
-            json.dump(data, file, indent=4)
+        record = {"_id": uuid4().__str__(), "name": name, "teachers": [], "themes": themes, "type": type_course}
+        self.courses.insert_one(record)
 
         return course
 
@@ -234,61 +169,61 @@ class CourseFactory(ICourseFactory):
         """a function that creates a teacher in an academy"""
         teacher = Teacher(full_name, [])
 
-        with open(self.__teachers_path, "r") as file:
-            data = json.load(file)
+        check = self.teachers.find_one({"full_name": full_name})
+        if check:
+            raise ValueError("Teacher is registered in the system")
 
-        to_json = vars(teacher)
-        data.append(to_json)
-
-        with open(self.__teachers_path, "w") as file:
-            json.dump(data, file, indent=4)
+        record = {"_id": uuid4().__str__(), "full_name": full_name, "courses": []}
+        self.teachers.insert_one(record)
 
         return teacher
 
+    def organization(self, course, teachers):
+        """a function that allows you to assign to a teacher's course"""
+        if not isinstance(course, Course) or not isinstance(teachers, list) or not all(isinstance(teacher, Teacher) for teacher in teachers):
+            raise TypeError("Wrong type of variables")
 
-def all_teachers(path):
-    """A function that displays all teachers of the academy"""
-    with open(path, "r") as file:
-        data = json.load(file)
-    teachers = []
-    for item in data:
-        teachers.append(Teacher(item["_full_name"], item["_courses"]))
-    return teachers
+        for teacher in teachers:
+            teacher.add_course(course.name)
+            course.add_teacher(teacher.full_name)
+            courses = self.teachers.find_one({"full_name": teacher.full_name})["courses"]
+            courses.append(course.name)
+            self.teachers.update_one({"full_name": teacher.full_name}, {"$set": {"courses": courses}})
 
+        self.courses.update_one({"name": course.name}, {"$set": {"teachers": course.teachers}})
 
-def all_courses(path):
-    """A function that displays all courses of the academy"""
-    with open(path, "r") as file:
-        data = json.load(file)
-    courses = []
-    for item in data:
-        if item["_type"] == "Local":
-            courses.append(
-                LocalCourse(item["_name"], item["_teacher"], item["_themes"]))
-        else:
-            courses.append(
-                OffsiteCourse(item["_name"], item["_teacher"], item["_themes"]))
+    def all_teachers(self):
+        """a function that finds all teachers in a database"""
+        teachers = []
+        items = self.teachers.find({})
+        for item in items:
+            teachers.append(Teacher(item["full_name"], item["courses"]))
+        return teachers
 
-    return courses
+    def all_courses(self):
+        """a function that finds all courses in a database"""
+        courses = []
+        items = self.courses.find({})
+        for item in items:
+            if item["type"] == "Local":
+                courses.append(LocalCourse(item["name"], item["teachers"], item["themes"]))
+            else:
+                courses.append(OffsiteCourse(item["name"], item["teachers"], item["themes"]))
+        return courses
 
 
 if __name__ == "__main__":
-    factory = CourseFactory("courses.json", "teachers.json")
-    teacher1 = factory.create_teacher("Pavel Valeriyovich Durov")
+    factory = CourseFactory()
+    teacher1 = factory.create_teacher("Steve Jobs")
     teacher2 = factory.create_teacher("Yurii Adamovich Tarnavskiy")
-    course1 = factory.create_course("Local", "Java", teacher2, ["OOP", "Strings"])
-    course2 = factory.create_course("Offsite", "Telegram", teacher1, ["Bots", "OOP"])
-    course3 = factory.create_course('Local', 'Python', teacher1, ['OOP', 'Django', 'Flask'])
-
+    course1 = factory.create_course("Local", "Java", ["OOP", "Strings"])
+    course2 = factory.create_course("Offsite", "Kotlin", ["OOP"])
+    factory.organization(course1, [teacher2])
+    factory.organization(course2, [teacher1])
     print(teacher1)
 
-    # all_c = all_courses("courses.json")
-    # all_t = all_teachers("teachers.json")
-    # for item in all_c:
-    #     print(item)
-    #     print()
-    #
-    # for item in all_t:
-    #     print(item)
-    #     print()
+
+
+
+
 

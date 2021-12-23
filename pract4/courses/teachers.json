@@ -1,15 +1,13 @@
-[
-    {
-        "_full_name": "Pavel Valeriyovich Durov",
-        "_courses": [
-            "Telegram",
-            "Python"
-        ]
-    },
-    {
-        "_full_name": "Yurii Adamovich Tarnavskiy",
-        "_courses": [
-            "Java"
-        ]
-    }
-]
+[{
+  "_id": "dee2d0e3-c85c-44db-87f3-270c42c25708",
+  "full_name": "Steve Jobs",
+  "courses": [
+    "Kotlin"
+  ]
+},{
+  "_id": "919a857f-2db3-47d1-a75f-12c3adb6d04f",
+  "full_name": "Yurii Adamovich Tarnavskiy",
+  "courses": [
+    "Java"
+  ]
+}]
