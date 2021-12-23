@@ -59,6 +59,9 @@ class Course(ICourse):
             raise ValueError("'teacher_name' can't be empty")
         self._teachers.append(teacher_name)
 
+    def __iter__(self):
+        return Iterator(self.teachers)
+
     def __str__(self):
         return f'Name of course: {self.name}\nTeachers: {",".join(self.teachers)}\nThemes:{",".join(self.themes)}'
 
@@ -133,8 +136,26 @@ class Teacher(ITeacher):
             raise ValueError("'course_name' can't be empty")
         self._courses.append(course_name)
 
+    def __iter__(self):
+        return Iterator(self.courses)
+
     def __str__(self):
         return f'Full name: {self.full_name}\nCourses: {",".join(self.courses)}'
+
+
+class Iterator:
+    def __init__(self, wrapped):
+        self.wrapped = wrapped
+        self.index = 0
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        if self.index >= len(self.wrapped):
+            raise StopIteration()
+        self.index += 1
+        return self.wrapped[self.index - 1]
 
 
 class CourseFactory(ICourseFactory):

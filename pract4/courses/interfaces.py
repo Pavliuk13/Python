@@ -30,6 +30,9 @@ class ICourse(ABC):
     @abstractmethod
     def add_teacher(self, teacher_name): pass
 
+    @abstractmethod
+    def __iter__(self): pass
+
 
 class ILocalCourse(ABC):
     """Interface for local courses"""
@@ -65,6 +68,9 @@ class ITeacher(ABC):
 
     @abstractmethod
     def add_course(self, course_name): pass
+
+    @abstractmethod
+    def __iter__(self): pass
 
 
 class ICourseFactory(ABC):
