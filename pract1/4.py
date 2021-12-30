@@ -4,21 +4,24 @@ from sys import argv
 capacity = int(argv[1])
 weights = list(map(int,argv[2:]))
 
-def best_knapsack(capacity, weights):
-    bars = [0] + weights
-    bars_dict = {}
-    for i in range(0, capacity + 1):
-        bars_dict[(i, 0)] = 0
-    for i in range(0, len(bars)):
-        bars_dict[(0, i)] = 0
-    for i in range(1, len(bars)):
-        for mass in range(1, capacity + 1):
-            bars_dict[(mass, i)] = bars_dict[(mass, (i - 1))]
-            if bars[i] <= mass:
-                temp_mass = bars_dict[(mass-bars[i]), i - 1] + bars[i]
-                if bars_dict[(mass,i)] < temp_mass:
-                    bars_dict[(mass,i)] = temp_mass
-    return max(bars_dict.values())
+
+def best_knapsack(max_weight, weights):
+    n = len(weights) + 1
+    array = [0] * n
+    for i in range(n):
+        array[i] = [0] * (max_weight + 1)
+
+    for i in range(0, n):
+        for j in range(0, max_weight + 1):
+            if i != 0 and j != 0:
+                if weights[i - 1] > j:
+                    array[i][j] = array[i - 1][j]
+                else:
+                    prev = array[i - 1][j]
+                    new_val = array[i - 1][j - weights[i - 1]] + weights[i - 1]
+                    array[i][j] = max(prev, new_val)
+
+    return array[n - 1][max_weight]
 
 
-print(best_knapsack(capacity,weights))
+print(best_knapsack(capacity, weights))
