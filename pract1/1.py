@@ -3,9 +3,11 @@ from sys import argv
 
 def calculate(user_input): 
     if len(user_input):
-        try:
-            return eval(''.join(argv[1:]))
-        except:
-            return f'Wrong input data'
+        return eval(''.join(argv[1:]))
 
-print(calculate(argv[1:]))
+
+def main():
+    try:
+        print(calculate(argv[1:]))
+    except Exception as ex:
+        print(ex)

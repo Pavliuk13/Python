@@ -3,16 +3,14 @@ import sys
 
 def check(parse, i, is_formula):
     if i == len(parse) or not is_formula:
-        if is_formula:
-            return True
-        else:
-            return False
+        return is_formula
 
     if parse[i] not in '+-' and not parse[i].isdigit():
         is_formula = False
 
     i += 1
     return check(parse, i, is_formula)
+
 
 def main():
     parse = "".join(sys.argv[1:])

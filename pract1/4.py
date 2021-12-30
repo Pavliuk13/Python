@@ -13,7 +13,7 @@ def best_knapsack(max_weight, weights):
 
     for i in range(0, n):
         for j in range(0, max_weight + 1):
-            if i != 0 and j != 0:
+            if i and j:
                 if weights[i - 1] > j:
                     array[i][j] = array[i - 1][j]
                 else:
