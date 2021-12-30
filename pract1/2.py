@@ -4,12 +4,11 @@ from operator import add, sub, mul, truediv
 
 
 def custom_calculate(user_input):
-    operations = {'add': add, 'sub': sub, 'mul': mul, 'div': truediv}
-    operatorUse = user_input[1]
-    nums = user_input[2:]
     try:
-        operations[operatorUse]
-        return reduce(lambda a, b: operations.get(operatorUse)(int(a), int(b)), nums)
+        elements = user_input[2:]
+        operation = user_input[1]
+        operation_store = {"add": add, "mul": mul, "sub": sub, "div": truediv}
+        return reduce(lambda a, b : operation_store[operation](int(a), int(b)), elements)
     except:
         return f'Wrong input data'
 
